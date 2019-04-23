@@ -4,6 +4,8 @@ import android.content.*
 import android.os.Bundle
 import android.os.IBinder
 import android.text.TextUtils.join
+import android.view.animation.AlphaAnimation
+import android.view.animation.Animation
 import androidx.appcompat.app.AppCompatActivity
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import kotlinx.android.synthetic.main.activity_main.*
@@ -76,7 +78,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showCount(count: Int) {
-        tv_count.text = getRomanNumber(count)
+        val anim = AlphaAnimation(1.0f, 0.2f)
+        anim.duration = 500
+        anim.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationStart(animation: Animation) {}
+
+            override fun onAnimationEnd(animation: Animation) {
+                tv_count.text = getRomanNumber(count)
+            }
+
+            override fun onAnimationRepeat(animation: Animation) {}
+        })
+
+        tv_count.startAnimation(anim)
     }
 
     fun getRomanNumber(number: Int): String {
