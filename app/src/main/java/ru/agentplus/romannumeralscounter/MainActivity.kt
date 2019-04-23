@@ -3,10 +3,13 @@ package ru.agentplus.romannumeralscounter
 import android.content.*
 import android.os.Bundle
 import android.os.IBinder
+import android.text.TextUtils.join
 import androidx.appcompat.app.AppCompatActivity
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
+import java.util.Collections.nCopies
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -73,7 +76,23 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showCount(count: Int) {
-        tv_count.text = count.toString()
+        tv_count.text = getRomanNumber(count)
+    }
+
+    fun getRomanNumber(number: Int): String {
+        return join("", nCopies<String>(number, "I"))
+            .replace("IIIII", "V")
+            .replace("IIII", "IV")
+            .replace("VV", "X")
+            .replace("VIV", "IX")
+            .replace("XXXXX", "L")
+            .replace("XXXX", "XL")
+            .replace("LL", "C")
+            .replace("LXL", "XC")
+            .replace("CCCCC", "D")
+            .replace("CCCC", "CD")
+            .replace("DD", "M")
+            .replace("DCD", "CM")
     }
 
     override fun onDestroy() {
