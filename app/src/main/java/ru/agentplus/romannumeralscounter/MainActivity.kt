@@ -7,7 +7,6 @@ import android.text.TextUtils.join
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
@@ -16,7 +15,7 @@ import java.util.Collections.nCopies
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var myService: CounterService
+    lateinit var counterService: CounterService
     private var isBound = false
     private var isPaused = true
 
@@ -32,7 +31,7 @@ class MainActivity : AppCompatActivity() {
             service: IBinder
         ) {
             val binder = service as CounterService.CounterBinder
-            myService = binder.service
+            counterService = binder.service
             isBound = true
         }
 
@@ -69,15 +68,38 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setUnPause() {
-        myService.playCount()
-        fab.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.ic_pause))
+        counterService.playCount()
         isPaused = false
+        setFabIcon()
     }
 
     private fun setPause() {
-        myService.pauseCount()
-        fab.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.ic_play))
+        counterService.pauseCount()
         isPaused = true
+        setFabIcon()
+    }
+
+    private fun setFabIcon() {
+        if (isPaused) {
+            fab.setImageResource(R.drawable.ic_play)
+        } else {
+            fab.setImageResource(R.drawable.ic_pause)
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        outState?.putBoolean("pause_state", isPaused)
+        outState?.putString("count_text", tv_count.text.toString())
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        super.onRestoreInstanceState(savedInstanceState)
+        if (savedInstanceState != null) {
+            isPaused = savedInstanceState.getBoolean("pause_state")
+            tv_count.text = savedInstanceState.getString("count_text")
+            setFabIcon()
+        }
     }
 
     private fun showCount(count: Int) {
