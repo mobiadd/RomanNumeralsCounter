@@ -7,6 +7,7 @@ import android.text.TextUtils.join
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
@@ -69,11 +70,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun setUnPause() {
         myService.playCount()
+        fab.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.ic_pause))
         isPaused = false
     }
 
     private fun setPause() {
         myService.pauseCount()
+        fab.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.ic_play))
         isPaused = true
     }
 
